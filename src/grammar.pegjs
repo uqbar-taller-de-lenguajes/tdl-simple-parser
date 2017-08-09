@@ -1,7 +1,11 @@
 {
+  const joinReplacingSeparator = (list, newSeparator) => list.map( ([,elem]) => newSeparator + elem ).join('')
+
   const { assign } = Object
   const { parseFloat } = Number
-  const joinReplacingSeparator = (list, newSeparator) => list.map( ([,elem]) => newSeparator + elem ).join('')
+
+  const path = require('path')
+  const { Bool, If } = require(path.resolve('src/langModel.js'))
 }
 
 
@@ -77,9 +81,10 @@ jsonNumber = negated:'-'? whole:[0-9]+ decimals:('.'[0-9]+)? { return parseFloat
 // // SIMPLE LANGUAGE
 // // ----------------------------------------------------------------------------------------------------------------------
 
-// lang = 'true'
-//      / 'false'
-//      / 'if ('expression') then ' expression ' else ' expression
+lang = expression
+expression = 'true'  { return Bool(true) }
+           / 'false' { return Bool(false) }
+           / 'if ' condition:expression ' then ' thenExpression:expression ' else ' elseExpression:expression { return If(condition,thenExpression,elseExpression) }
 
 // // TODO: Add {or, and, not}
 
