@@ -5,7 +5,7 @@
   const { parseFloat } = Number
 
   const path = require('path')
-  const { Bool, If, And, Or } = require(path.resolve('src/langModel.js'))
+  const { Bool, If, And, Or, Zero, Succ, Prev, IsZero } = require(path.resolve('src/langModel.js'))
 }
 
 
@@ -96,10 +96,18 @@ xmlContent = xmlTag
 // // ----------------------------------------------------------------------------------------------------------------------
 
 lang = expression
-expression = 'true'  { return Bool(true) }
-           / 'false' { return Bool(false) }
-           / 'if ' _ condition:expression _ 'then' _ thenExpression:expression _ 'else' _ elseExpression:expression { return If(condition,thenExpression,elseExpression) }
+
+expression = 'if ' _ condition:expression _ 'then' _ thenExpression:expression _ 'else' _ elseExpression:expression { return If(condition,thenExpression,elseExpression) }
            / 'and' _ '(' _ left: expression _ ',' _ right: expression _ ')' { return And(left, right) }
            / 'or' _ '(' _ left: expression _ ',' _ right: expression _ ')' { return Or(left, right) }
+           / 'isZero' _ '(' _ value:expression _ ')' { return IsZero(value) }
+           / value
 
-// // EXERCISE: Extend the parser and model to include {0, isZero, succ, prev}
+value = booleanValue
+      / numericValue
+
+booleanValue = value:('true' / 'false') { return Bool(value === 'true') }
+
+numericValue = '0' { return Zero }
+             / 'succ' _ '(' _ value:expression _ ')' { return Succ(value) }
+             / 'prev' _ '(' _ value:expression _ ')' { return Prev(value) }

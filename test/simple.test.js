@@ -1,4 +1,4 @@
-import { And, Bool, If, Or } from '../src/langModel'
+import { And, Bool, If, IsZero, Or, Prev, Succ, Zero } from '../src/langModel'
 import { describe, it } from 'mocha'
 
 import { expect } from 'chai'
@@ -13,6 +13,22 @@ describe('simple language parser', () => {
     it('should parse booleans as a boolean values', () => {
       expect(parse('true')).to.deep.equal(Bool(true))
       expect(parse('false')).to.deep.equal(Bool(false))
+    })
+
+    it('should parse 0', () => {
+      expect(parse('0')).to.deep.equal(Zero)
+    })
+
+    it('should parse succ', () => {
+      expect(parse('succ(0)')).to.deep.equal(Succ(Zero))
+    })
+
+    it('should parse prev', () => {
+      expect(parse('prev(0)')).to.deep.equal(Prev(Zero))
+    })
+
+    it('should parse isZero', () => {
+      expect(parse('isZero(0)')).to.deep.equal(IsZero(Zero))
     })
 
     it('should parse if-then-else', () => {
