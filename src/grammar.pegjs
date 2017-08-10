@@ -5,7 +5,7 @@
   const { parseFloat } = Number
 
   const path = require('path')
-  const { Bool, If } = require(path.resolve('src/langModel.js'))
+  const { Bool, If, And, Or } = require(path.resolve('src/langModel.js'))
 }
 
 
@@ -64,16 +64,20 @@ morseChar = '.....'  { return '5' }
 // JSON
 // ----------------------------------------------------------------------------------------------------------------------
 
+_ = __?
+__ = [ \t\r\n]+
+
 json = jsonHash
 jsonValue = jsonHash
           / jsonString
           / jsonNumber
-jsonHash = '{' entries:(jsonString ': ' jsonValue)* '}' { return entries.reduce((obj, [key,,value]) => assign(obj,{[key]: value}), {}) }
+          / jsonBool
+          / jsonArray
+jsonHash = '{' _ entries:(jsonString _ ':' _ jsonValue)* _ '}' { return entries.reduce((obj, [key,,,,value]) => assign(obj,{[key]: value}), {}) }
 jsonString = '"' chars:[^"]* '"' { return chars.join('') }
 jsonNumber = negated:'-'? whole:[0-9]+ decimals:('.'[0-9]+)? { return parseFloat( (negated||'') + whole.join('') + (decimals ? '.' + decimals[1].join('') : '') ) }
-
-// DISCUSSION: Lexer, spaces and tests
-// TODO: Add Booleans and Arrays
+jsonBool = value:('true' / 'false') { return value === 'true' }
+jsonArray = '[' _ values:( jsonValue ( _ ',' _ jsonValue )* )? _ ']' { return values ? [values[0], ...values[1].map( ([,,,value]) => value )] : [] }
 
 // EXERCISE: Make a parser for XML that parses to the same model.
 
@@ -84,8 +88,8 @@ jsonNumber = negated:'-'? whole:[0-9]+ decimals:('.'[0-9]+)? { return parseFloat
 lang = expression
 expression = 'true'  { return Bool(true) }
            / 'false' { return Bool(false) }
-           / 'if ' condition:expression ' then ' thenExpression:expression ' else ' elseExpression:expression { return If(condition,thenExpression,elseExpression) }
-
-// // TODO: Add {or, and, not}
+           / 'if ' _ condition:expression _ 'then' _ thenExpression:expression _ 'else' _ elseExpression:expression { return If(condition,thenExpression,elseExpression) }
+           / 'and' _ '(' _ left: expression _ ',' _ right: expression _ ')' { return And(left, right) }
+           / 'or' _ '(' _ left: expression _ ',' _ right: expression _ ')' { return Or(left, right) }
 
 // // EXERCISE: Extend the parser and model to include {0, isZero, succ, prev}

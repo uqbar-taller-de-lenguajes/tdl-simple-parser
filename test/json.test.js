@@ -76,4 +76,41 @@ describe('json parser', () => {
 
   })
 
+  describe('boolean', () => {
+
+    const parse = text => parser(text, { startRule: 'jsonBool' })
+
+    it('should parse booleans', () => {
+      expect(parse('true')).to.equal(true)
+      expect(parse('false')).to.equal(false)
+    })
+
+  })
+
+  describe('array', () => {
+
+    const parse = text => parser(text, { startRule: 'jsonArray' })
+
+    it('should parse empty arrays', () => {
+      expect(parse('[]')).to.deep.equal([])
+    })
+
+    it('should parse non-empty arrays', () => {
+      expect(parse('["foo", "bar"]')).to.deep.equal(['foo', 'bar'])
+    })
+
+    it('should parse nested arrays', () => {
+      expect(parse('["foo", ["bar", 5]]')).to.deep.equal(['foo', ['bar', 5]])
+    })
+
+    it('should fail for unclosed arrays', () => {
+      expect(() => parse('["foo", "bar"')).to.throw()
+    })
+
+    it('should fail for unopened arrays', () => {
+      expect(() => parse('"foo", "bar"]')).to.throw()
+    })
+
+  })
+
 })
