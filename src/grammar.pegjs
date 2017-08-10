@@ -79,7 +79,17 @@ jsonNumber = negated:'-'? whole:[0-9]+ decimals:('.'[0-9]+)? { return parseFloat
 jsonBool = value:('true' / 'false') { return value === 'true' }
 jsonArray = '[' _ values:( jsonValue ( _ ',' _ jsonValue )* )? _ ']' { return values ? [values[0], ...values[1].map( ([,,,value]) => value )] : [] }
 
-// EXERCISE: Make a parser for XML that parses to the same model.
+// ----------------------------------------------------------------------------------------------------------------------
+// XML
+// ----------------------------------------------------------------------------------------------------------------------
+
+xml = xmlTag
+xmlTag = '<' _ name:xmlId _ attributes:xmlAttribute* '/>' { return assign({type: name}, ...attributes) }
+       / '<' _ name:xmlId _ attributes:xmlAttribute* '>' _ content: xmlContent* _ '</' _ closeName:xmlId _ '>' & { return name === closeName } { return assign({type: name, content }, ...attributes) }
+xmlId = id:[^ !"#$%&'()*+,/;<=>?@[\]^`{|}~]+ { return id.join('') }
+xmlAttribute = _ key:xmlId _ '=' _ '"' _ value:[^"<]* _ '"' _ {return {[key]: value.join('')}}
+xmlContent = xmlTag
+           / text:[^</>]+ { return text.join('') }
 
 // // ----------------------------------------------------------------------------------------------------------------------
 // // SIMPLE LANGUAGE
