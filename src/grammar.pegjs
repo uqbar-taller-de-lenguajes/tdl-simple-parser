@@ -98,9 +98,7 @@ xmlContent = xmlTag
 lang = expression
 
 expression = 'if ' _ condition:expression _ 'then' _ thenExpression:expression _ 'else' _ elseExpression:expression { return If(condition,thenExpression,elseExpression) }
-           / 'and' _ '(' _ left: expression _ ',' _ right: expression _ ')' { return And(left, right) }
-           / 'or' _ '(' _ left: expression _ ',' _ right: expression _ ')' { return Or(left, right) }
-           / 'isZero' _ '(' _ value:expression _ ')' { return IsZero(value) }
+           / 'isZero' _ value:expression { return IsZero(value) }
            / value
 
 value = booleanValue
@@ -109,5 +107,5 @@ value = booleanValue
 booleanValue = value:('true' / 'false') { return Bool(value === 'true') }
 
 numericValue = '0' { return Zero }
-             / 'succ' _ '(' _ value:expression _ ')' { return Succ(value) }
-             / 'prev' _ '(' _ value:expression _ ')' { return Prev(value) }
+             / 'succ' _ value:expression { return Succ(value) }
+             / 'prev' _ value:expression { return Prev(value) }
