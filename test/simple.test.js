@@ -1,4 +1,4 @@
-import { And, Bool, If, Or } from '../src/langModel'
+import { Bool, If } from '../src/langModel'
 import { describe, it } from 'mocha'
 
 import { expect } from 'chai'
@@ -29,20 +29,6 @@ describe('simple language parser', () => {
         If(Bool(true), Bool(true), Bool(false)),
         If(Bool(false), Bool(false), Bool(true)),
       )
-
-      expect(parse(src)).to.deep.equal(expected)
-    })
-
-    it('should parse "and"', () => {
-      const src = 'and(false, true)'
-      const expected = And(Bool(false), Bool(true))
-
-      expect(parse(src)).to.deep.equal(expected)
-    })
-
-    it('should parse "or"', () => {
-      const src = 'or(false, true)'
-      const expected = Or(Bool(false), Bool(true))
 
       expect(parse(src)).to.deep.equal(expected)
     })

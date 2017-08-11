@@ -5,7 +5,7 @@
   const { parseFloat } = Number
 
   const path = require('path')
-  const { Bool, If, And, Or } = require(path.resolve('src/langModel.js'))
+  const { Bool, If, Succ, Prev, IsZero, Zero } = require(path.resolve('src/langModel.js'))
 }
 
 
@@ -86,10 +86,9 @@ jsonArray = '[' _ values:( jsonValue ( _ ',' _ jsonValue )* )? _ ']' { return va
 // // ----------------------------------------------------------------------------------------------------------------------
 
 lang = expression
-expression = 'true'  { return Bool(true) }
-           / 'false' { return Bool(false) }
-           / 'if ' _ condition:expression _ 'then' _ thenExpression:expression _ 'else' _ elseExpression:expression { return If(condition,thenExpression,elseExpression) }
-           / 'and' _ '(' _ left: expression _ ',' _ right: expression _ ')' { return And(left, right) }
-           / 'or' _ '(' _ left: expression _ ',' _ right: expression _ ')' { return Or(left, right) }
 
-// // EXERCISE: Extend the parser and model to include {0, isZero, succ, prev}
+expression = 'if ' _ condition:expression _ 'then' _ thenExpression:expression _ 'else' _ elseExpression:expression { return If(condition,thenExpression,elseExpression) }
+           / 'true' { return Bool(true) }
+           / 'false' { return Bool(false) }
+
+// EXERCISE: Extend the languaje to include {0 succ prev iszero}.

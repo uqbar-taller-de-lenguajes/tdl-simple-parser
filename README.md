@@ -13,5 +13,4 @@ Código para el 2do encuentro del Taller de Lenguajes 2017.
 
 ## Tarea
 * Implementar un parser (y sus tests) similar al de JSON, que parsee XML a la misma representación intermedia.
-* Extender el parser de nuestro lenguaje con booleanos para agregarle or y and (sin precedencia).
 * Extender el parser de nuestro lenguaje con booleanos para agregarle 0, succ, prev y isZero.
