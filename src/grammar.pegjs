@@ -134,4 +134,4 @@ expression = 'true'  { return Bool(true) }
 
 // // TODO: Add {or, and, not}
 
-// // EXERCISE: Extend the parser and model to include {0, isZero, succ, prev}
+// // TODO: Extend the parser and model to include {0, isZero, succ, prev}
