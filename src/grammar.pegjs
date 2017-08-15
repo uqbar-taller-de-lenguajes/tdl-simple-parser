@@ -118,7 +118,10 @@ jsonHash = '{' entries:(jsonString ': ' jsonValue)* '}' { return entries.reduce(
 jsonString = '"' chars:[^"]* '"' { return chars.join('') }
 jsonNumber = negated:'-'? whole:[0-9]+ decimals:('.'[0-9]+)? { return parseFloat( (negated||'') + whole.join('') + (decimals ? '.' + decimals[1].join('') : '') ) }
 
-// DISCUSSION: Lexer, spaces and tests
+// DISCUSSION: Testing: Check the json.test.js file.
+// DISCUSSION: Lexer & spaces: Does this grammar properly describe the sintax? (think about enters and spaces) Should this be reflected on the tests?
+// DISCUSSION: Hash definition and commas: This grammar is not completely well formed. What's missing? How do we cover this on the tests?
+
 // TODO: Add Booleans and Arrays
 
 // EXERCISE: Make a parser for XML that parses to the same model.
