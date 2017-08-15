@@ -58,6 +58,10 @@ describe('json parser', () => {
       expect(parse('{"foo": "bar"}')).to.deep.equal({ foo: 'bar' })
     })
 
+    it('should parse hashes with multiple keys', () => {
+      expect(parse('{"foo": 5, "bar": 7}')).to.deep.equal({ foo: 5, bar: 7 })
+    })
+
     it('should parse nested hashes', () => {
       expect(parse('{"foo": {"bar": 5}}')).to.deep.equal({ foo: { bar: 5 } })
     })

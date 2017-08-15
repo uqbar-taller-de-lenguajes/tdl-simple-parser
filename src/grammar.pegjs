@@ -73,7 +73,8 @@ jsonValue = jsonHash
           / jsonNumber
           / jsonBool
           / jsonArray
-jsonHash = '{' _ entries:(jsonString _ ':' _ jsonValue)* _ '}' { return entries.reduce((obj, [key,,,,value]) => assign(obj,{[key]: value}), {}) }
+jsonHash = '{' _ entries:( entry (_','_ entry)* )? _ '}' { return (entries ? [entries[0], ...entries[1].map(([,,,entry]) => entry )] : []).reduce((obj, [key,value]) => assign(obj,{[key]: value}), {}) }
+entry = key:jsonString _ ':' _ value:jsonValue {return [key, value]}
 jsonString = '"' chars:[^"]* '"' { return chars.join('') }
 jsonNumber = negated:'-'? whole:[0-9]+ decimals:('.'[0-9]+)? { return parseFloat( (negated||'') + whole.join('') + (decimals ? '.' + decimals[1].join('') : '') ) }
 jsonBool = value:('true' / 'false') { return value === 'true' }
@@ -91,9 +92,9 @@ xmlAttribute = _ key:xmlId _ '=' _ '"' _ value:[^"<]* _ '"' _ {return {[key]: va
 xmlContent = xmlTag
            / text:[^</>]+ { return text.join('') }
 
-// // ----------------------------------------------------------------------------------------------------------------------
-// // SIMPLE LANGUAGE
-// // ----------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------
+// SIMPLE LANGUAGE
+// ----------------------------------------------------------------------------------------------------------------------
 
 lang = expression
 
