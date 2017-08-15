@@ -80,17 +80,7 @@ jsonNumber = negated:'-'? whole:[0-9]+ decimals:('.'[0-9]+)? { return parseFloat
 jsonBool = value:('true' / 'false') { return value === 'true' }
 jsonArray = '[' _ values:( jsonValue ( _ ',' _ jsonValue )* )? _ ']' { return values ? [values[0], ...values[1].map( ([,,,value]) => value )] : [] }
 
-// ----------------------------------------------------------------------------------------------------------------------
-// XML
-// ----------------------------------------------------------------------------------------------------------------------
-
-xml = xmlTag
-xmlTag = '<' _ name:xmlId _ attributes:xmlAttribute* '/>' { return assign({type: name}, ...attributes) }
-       / '<' _ name:xmlId _ attributes:xmlAttribute* '>' _ content: xmlContent* _ '</' _ closeName:xmlId _ '>' & { return name === closeName } { return assign({type: name, content }, ...attributes) }
-xmlId = id:[^ !"#$%&'()*+,/;<=>?@[\]^`{|}~]+ { return id.join('') }
-xmlAttribute = _ key:xmlId _ '=' _ '"' _ value:[^"<]* _ '"' _ {return {[key]: value.join('')}}
-xmlContent = xmlTag
-           / text:[^</>]+ { return text.join('') }
+// EXERCISE: Make a parser for XML that parses to the same model.
 
 // ----------------------------------------------------------------------------------------------------------------------
 // SIMPLE LANGUAGE
@@ -99,14 +89,7 @@ xmlContent = xmlTag
 lang = expression
 
 expression = 'if ' _ condition:expression _ 'then' _ thenExpression:expression _ 'else' _ elseExpression:expression { return If(condition,thenExpression,elseExpression) }
-           / 'isZero' _ value:expression { return IsZero(value) }
-           / value
+           / 'true' { return Bool(true) }
+           / 'false' { return Bool(false) }
 
-value = booleanValue
-      / numericValue
-
-booleanValue = value:('true' / 'false') { return Bool(value === 'true') }
-
-numericValue = '0' { return Zero }
-             / 'succ' _ value:expression { return Succ(value) }
-             / 'prev' _ value:expression { return Prev(value) }
+// EXERCISE: Extend the languaje to include {0 succ prev iszero}.
